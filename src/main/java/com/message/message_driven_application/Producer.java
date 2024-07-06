@@ -2,6 +2,7 @@ package com.message.message_driven_application;
 import org.apache.log4j.Logger;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
@@ -12,6 +13,7 @@ public class Producer implements Runnable {
     private final BlockingQueue<String> queue;
     private final List<String> messages;
     private static final Logger logger = Logger.getLogger(Producer.class);
+    public static AtomicInteger totalMessagesProduced = new AtomicInteger(0);
 
     /**
      * Constructor for the Producer class.
@@ -34,8 +36,11 @@ public class Producer implements Runnable {
                 queue.put(message);
                 logger.info("Produced: " + message);
                 System.out.println("Produced: " + message);
+                totalMessagesProduced.incrementAndGet();
             }
             queue.put("END");
+            logger.info("Total messages produced: " + totalMessagesProduced);
+            System.out.println("Total messages produced: " + totalMessagesProduced);
         } catch (InterruptedException ex) {
             logger.error("Producer was interrupted", ex);
             System.out.printf("Producer was interrupted", ex);
